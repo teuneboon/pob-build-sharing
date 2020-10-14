@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text
+import datetime
+
+from sqlalchemy import Column, Integer, String, Text, DateTime
 
 from database import Base
 
@@ -12,3 +14,8 @@ class Build(Base):
 
     # @TODO: Text is limited to 65k chars iirc, I think that's enough right?
     content = Column(Text)
+
+    creation_time = Column(DateTime(), default=datetime.datetime.utcnow)
+    # @TODO: figure out if this is legal to always log, I think it's allowed for spam protection but might need to be in a privacy policy or something?
+    # @TODO: String for IP is super lazy programming
+    creator_ip = Column(String(255))
