@@ -17,8 +17,8 @@ app = FastAPI()
 
 @app.get('/', response_class=HTMLResponse, include_in_schema=False)
 def home():
-    return 'You probably want to visit <a href="/docs">/docs</a> or <a href="/redoc">/redoc</a> instead. ' \
-           'Getting a build requires a' \
+    return 'You probably want to visit <a href="/docs">/docs</a> or <a href="/redoc">/redoc</a> instead.<br />' \
+           'Getting a build requires an <strong>accept: application/json</strong> header or you\'ll be redirect to this page.<br />' \
            'This should just be some fancy looking page made by someone who actually knows how to design stuff point ' \
            'people to the Path of Building download'
 
