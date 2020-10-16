@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import FastAPI, Query, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
-from starlette.responses import HTMLResponse, RedirectResponse
+from starlette.responses import HTMLResponse, RedirectResponse, Response
 
 import crud
 import models
@@ -18,12 +18,12 @@ app = FastAPI()
 @app.get('/', response_class=HTMLResponse, include_in_schema=False)
 def home():
     return 'You probably want to visit <a href="/docs">/docs</a> or <a href="/redoc">/redoc</a> instead.<br />' \
-           'Getting a build requires an <strong>accept: application/json</strong> header or you\'ll be redirect to this page.<br />' \
+           'Getting a build requires an <strong>accept: application/xml</strong> header or you\'ll be redirect to this page.<br />' \
            'This should just be some fancy looking page made by someone who actually knows how to design stuff point ' \
            'people to the Path of Building download'
 
 
-@app.get('/{build_id}', response_model=Build)
+@app.get('/{build_id}')
 def get_build(
         *,
         db: Session = Depends(get_db),
@@ -31,13 +31,13 @@ def get_build(
         accept: Optional[str] = Header(None),
 ):
     """ Returns the base64-encoded build code to import into Path of Building """
-    # @TODO: I think there has to be a better way to check for application/json
-    if 'application/json' not in accept:
+    # @TODO: I think there has to be a better way to check for application/xml
+    if 'application/xml' not in accept:
         return RedirectResponse('/')
 
     db_build = crud.get_build(db, build_id)
     if db_build:
-        return Build.from_orm(db_build)
+        return Response(content=db_build.code, media_type='application/xml')
     else:
         raise HTTPException(status_code=404, detail='Build not found')
 
