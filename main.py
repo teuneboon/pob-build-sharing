@@ -12,7 +12,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-@app.get('/{build_id}/?')
+@app.get('/{build_id}')
 def get_build(
         *,
         db: Session = Depends(get_db),
@@ -22,7 +22,7 @@ def get_build(
     return crud.get_build(db, build_id)
 
 
-@app.post('/create/?')
+@app.post('/create')
 def create_build(
         *,
         db: Session = Depends(get_db),
