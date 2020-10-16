@@ -10,10 +10,10 @@ class Build(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     # @TODO: not 255 length maybe
-    guid = Column(String(255), nullable=False)
+    guid = Column(String(255), nullable=False, unique=True)
 
     # @TODO: Text is limited to 65k chars iirc, I think that's enough right?
-    code = Column(Text, unique=True)
+    code = Column(Text)
 
     creation_time = Column(DateTime(), default=datetime.datetime.utcnow)
     # @TODO: figure out if this is legal to always log, I think it's allowed for spam protection but might need to be in a privacy policy or something?

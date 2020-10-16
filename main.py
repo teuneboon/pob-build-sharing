@@ -49,6 +49,7 @@ def create_build(
         build: Build,
 ) -> str:
     """ Saves a build into the database and returns you with a code to retrieve the build with """
-    # @TODO: any validation at all would be nice here, validate whether it's even base64 to start with
+    # @TODO: any validation at all would be nice here, validate whether it's even a valid build
+    # @TODO: this can technically fail, handle that properly
     db_build = crud.create_build(db, build)
     return db_build.guid
