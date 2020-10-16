@@ -13,7 +13,7 @@ app = FastAPI()
 
 
 @app.get('/{build_id}/?')
-async def get_build(
+def get_build(
         *,
         db: Session = Depends(get_db),
         build_id: str = Query(..., description='The ID of the build, for example: 1a2b3c4e'),
@@ -23,7 +23,7 @@ async def get_build(
 
 
 @app.post('/create/?')
-async def create_build(
+def create_build(
         *,
         db: Session = Depends(get_db),
         build: Build,
