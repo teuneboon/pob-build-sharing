@@ -8,6 +8,7 @@ import crud
 import models
 from database import engine
 from get_db import get_db
+from helpers import valid_content_length
 from schemas import Build
 
 models.Base.metadata.create_all(bind=engine)
@@ -46,17 +47,18 @@ def get_build(
         raise HTTPException(status_code=404, detail='Build not found')
 
 
-@app.post('/create')
+@app.post('/create', dependencies=[Depends(valid_content_length)])
 def create_build(
         *,
         db: Session = Depends(get_db),
         build_file: UploadFile = File(...),
 ) -> str:
     """ Saves a build into the database and returns you with a code to retrieve the build with """
+    # @TODO: read the file in chunks for more DoS safety
     build = str(build_file.file.read(), 'utf-8')
 
     # @TODO: this validation is not great, but should prevent most accidental issues
-    if '<PathOfBuilding>' not in build:
+    if len(build) > 65000 or '<PathOfBuilding>' not in build:
         raise HTTPException(422, detail='Not a valid Path of Building code.')
 
     # @TODO: this can technically fail(returns None if it does), handle that properly
