@@ -13,7 +13,7 @@ class Build(Base):
     guid = Column(String(255), nullable=False)
 
     # @TODO: Text is limited to 65k chars iirc, I think that's enough right?
-    content = Column(Text)
+    code = Column(Text, unique=True)
 
     creation_time = Column(DateTime(), default=datetime.datetime.utcnow)
     # @TODO: figure out if this is legal to always log, I think it's allowed for spam protection but might need to be in a privacy policy or something?
