@@ -18,4 +18,3 @@ If we're out of PoC status we'd need:
 - Maybe design some landing page if you go to the site in a browser
 - Maybe switch to setup.py instead of requirements.txt
 - Linting + other CI stuff
-- Pin dependencies
