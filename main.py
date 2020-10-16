@@ -48,6 +48,7 @@ def create_build(
         db: Session = Depends(get_db),
         build: Build,
 ) -> str:
-    """ """
+    """ Saves a build into the database and returns you with a code to retrieve the build with """
+    # @TODO: any validation at all would be nice here, validate whether it's even base64 to start with, validate max length etc.
     db_build = crud.create_build(db, build)
     return db_build.guid
