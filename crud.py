@@ -4,7 +4,6 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 import models
-import schemas
 from helpers import generate_random_guid
 
 MAX_ATTEMPTS = 3
@@ -14,7 +13,7 @@ def get_build(db: Session, guid: str):
     return db.query(models.Build).filter(models.Build.guid == guid).one_or_none()
 
 
-def create_build(db: Session, build: schemas.Build):
+def create_build(db: Session, build: str):
     """ Creates a build with a random guid, returns None if it fails to create a build """
     attempts = 0
 
@@ -25,7 +24,7 @@ def create_build(db: Session, build: schemas.Build):
 
         guid = generate_random_guid()
         # @TODO: actually log ip address
-        db_build = models.Build(code=build.code, guid=guid, creator_ip='127.0.0.1')
+        db_build = models.Build(code=build, guid=guid, creator_ip='127.0.0.1')
         db.add(db_build)
 
         try:
