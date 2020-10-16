@@ -19,7 +19,7 @@ def get_build(
         build_id: str = Query(..., description='The ID of the build, for example: 1a2b3c4e'),
 ) -> Build:
     """ Returns the base64-encoded build code to import into Path of Building """
-    return crud.get_build(db, build_id)
+    return Build.from_orm(crud.get_build(db, build_id))
 
 
 @app.post('/create')
