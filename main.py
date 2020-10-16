@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import FastAPI, Query, Depends, HTTPException, Header, Body
+from fastapi import FastAPI, Query, Depends, HTTPException, Header, UploadFile, File
 from sqlalchemy.orm import Session
 from starlette.responses import HTMLResponse, RedirectResponse, Response
 
@@ -50,13 +50,15 @@ def get_build(
 def create_build(
         *,
         db: Session = Depends(get_db),
-        build: str = Body(..., media_type='application/xml'),
+        build_file: UploadFile = File(...),
 ) -> str:
     """ Saves a build into the database and returns you with a code to retrieve the build with """
+    build = str(build_file.file.read(), 'utf-8')
+
     # @TODO: this validation is not great, but should prevent most accidental issues
     if '<PathOfBuilding>' not in build:
         raise HTTPException(422, detail='Not a valid Path of Building code.')
 
-        # @TODO: this can technically fail(returns None if it does), handle that properly
+    # @TODO: this can technically fail(returns None if it does), handle that properly
     db_build = crud.create_build(db, build)
     return db_build.guid
