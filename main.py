@@ -51,7 +51,7 @@ def create_build(
     """ Saves a build into the database and returns you with a code to retrieve the build with """
     # @TODO: this validation is not great, but should prevent most accidental issues
     if '<PathOfBuilding>' not in build.code:
-        raise Exception()  # @TODO: proper validationerror
+        raise HTTPException(422, detail='Not a valid Path of Building code.')
 
         # @TODO: this can technically fail(returns None if it does), handle that properly
     db_build = crud.create_build(db, build)
