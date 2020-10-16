@@ -18,7 +18,7 @@ app = FastAPI()
 @app.get('/', response_class=HTMLResponse, include_in_schema=False)
 def home():
     return 'You probably want to visit <a href="/docs">/docs</a> or <a href="/redoc">/redoc</a> instead.<br />' \
-           'Getting a build requires an <strong>accept: application/xml</strong> header or you\'ll be redirect to this page.<br />' \
+           'Getting a build requires an <strong>accept: application/xml</strong> or <strong>accept: application/json</strong> header or you\'ll be redirect to this page.<br />' \
            'This should just be some fancy looking page made by someone who actually knows how to design stuff point ' \
            'people to the Path of Building download'
 
@@ -31,13 +31,17 @@ def get_build(
         accept: Optional[str] = Header(None),
 ):
     """ Returns the base64-encoded build code to import into Path of Building """
-    # @TODO: I think there has to be a better way to check for application/xml
-    if 'application/xml' not in accept:
+    # @TODO: I think there has to be a better way to check for application/xml/json
+    if 'application/xml' not in accept and 'application/json' not in accept:
         return RedirectResponse('/')
 
     db_build = crud.get_build(db, build_id)
     if db_build:
-        return Response(content=db_build.code, media_type='application/xml')
+        # @TODO: a bit scuffed
+        if 'application/xml' in accept:
+            return Response(content=db_build.code, media_type='application/xml')
+        else:
+            return Build.from_orm(db_build)
     else:
         raise HTTPException(status_code=404, detail='Build not found')
 
